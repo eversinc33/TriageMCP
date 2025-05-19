@@ -8,7 +8,7 @@ A minimal prompt idea could be:
 You are a malware analyst tasked to analyse the sample at <PATH> with your MCP tools. Create a markdown report that summarizes your findings. 
 ```
 
-Of course supplying more info will usually result in a better result.
+Of course supplying more info will usually yield a better result.
 
 ### Installation
 
