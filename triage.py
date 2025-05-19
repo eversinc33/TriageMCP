@@ -9,9 +9,9 @@ import json
 import yara
 from mcp.server.fastmcp import FastMCP
 
-FLOSS_EXE_PATH="C:\\Tools\\floss.exe"
-UPX_EXE_PATH="C:\\Tools\\upx.exe"
-CAPA_EXE_PATH="C:\\Tools\\capa.exe"
+FLOSS_EXE_PATH="C:\\Tools\\FLOSS\\floss.exe"
+UPX_EXE_PATH="C:\\Tools\\upx\\upx-5.1.0-win64\\upx.exe"
+CAPA_EXE_PATH="C:\\Tools\\capa\\capa.exe"
 YARA_RULE_PATH="C:\\Tools\\yara-forge\\"
 
 mcp = FastMCP("TriageMCP")
@@ -295,11 +295,11 @@ def run_capa_scan(file_path: str) -> dict:
     try:
         if os.path.isfile(CAPA_EXE_PATH):
             output = subprocess.check_output(
-                [CAPA_EXE_PATH, "-j", file_path],
+                [CAPA_EXE_PATH, "-q", file_path],
                 stderr=subprocess.DEVNULL,
                 universal_newlines=True
             )
-            return json.loads(output)
+            return output
         else:
             return {"error": "capa.exe not found"}
     except subprocess.CalledProcessError:
@@ -316,16 +316,16 @@ def run_floss(file_path: str) -> dict:
         file_path: Full or relative path to the file to analyze
         
     Returns:
-        A json output containing the strings.
+        A list of strings.
     """
     try:
         if os.path.isfile(FLOSS_EXE_PATH):
             output = subprocess.check_output(
-                [FLOSS_EXE_PATH, "-j", file_path],
+                [FLOSS_EXE_PATH, file_path],
                 stderr=subprocess.DEVNULL,
                 universal_newlines=True
             )
-            return json.loads(output)
+            return output
         else:
             return {"error": "floss.exe not found"}
     except subprocess.CalledProcessError:
