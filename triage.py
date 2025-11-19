@@ -8,13 +8,15 @@ import subprocess
 import json
 import yara
 from mcp.server.fastmcp import FastMCP
+import argparse
+from urllib.parse import urlparse
 
 FLOSS_EXE_PATH="C:\\Tools\\FLOSS\\floss.exe"
 UPX_EXE_PATH="C:\\Tools\\upx\\upx-5.1.0-win64\\upx.exe"
 CAPA_EXE_PATH="C:\\Tools\\capa\\capa.exe"
 YARA_RULE_PATH="C:\\Tools\\yara-forge\\"
 
-mcp = FastMCP("TriageMCP")
+mcp = FastMCP("TriageMCP", log_level="ERROR")
 
 # --------------------------------------------
 # Utils
@@ -372,4 +374,21 @@ def upx_unpack(file_path: str) -> dict:
         }
 
 if __name__ == "__main__":
-    mcp.run()
+    parser = argparse.ArgumentParser(description="MCP server for static PE analysis.")
+    parser.add_argument("--transport", type=str, default="stdio", help="MCP transport protocol to use (stdio or http://127.0.0.1:8744)")
+    args = parser.parse_args()
+
+    try:
+        if args.transport == "stdio":
+            mcp.run(transport="stdio")
+        else:
+            url = urlparse(args.transport)
+            if url.hostname is None or url.port is None:
+                raise Exception(f"Invalid transport URL: {args.transport}")
+            mcp.settings.host = url.hostname
+            mcp.settings.port = url.port
+            print(f"MCP Server availabile at http://{mcp.settings.host}:{mcp.settings.port}/sse")
+            mcp.settings.log_level = "INFO"
+            mcp.run(transport="sse")
+    except KeyboardInterrupt:
+        pass
