@@ -10,21 +10,37 @@ You are a malware analyst tasked to analyse the sample at <PATH> with your MCP t
 
 Of course supplying more info will usually yield a better result.
 
-### Installation
+## Installation
+Install dependencies:
 
-Install dependencies
-
-```powershell
-pip install pefile yara-python die-python fastmcp
+```shell
+pip install pefile yara-python die-python mcp[cli]
 ```
 
-Adjust `triage.py` and change `<TOOL>_EXE_PATH` and `YARA_RULE_PATH` accordingly. Then run:
+Then adjust `triage.py` and change `<TOOL>_EXE_PATH` and `YARA_RULE_PATH` accordingly.
 
-```powershell
-fastmcp install .\triage.py
+### Claude Desktop Integration
+You can install this server in Claude Desktop and interact with it right away by running:
+
+```shell
+mcp install .\triage.py
 ```
 
-### TODO
+## Different transport protocol
+By default, without using arguments, the server will use `stdio` transport:
+
+```shell
+.\triage.py
+```
+
+To use `SSE` transport:
+
+```shell
+.\triage.py --transport http://127.0.0.1:8744
+```
+
+## TODO
 
 * VT/AnyRun/Sandbox integration
 * Hash lookup
+* Streamable HTTP transport
