@@ -252,7 +252,7 @@ def run_die(file_path: str) -> dict:
     Returns:
         JSON info about the PE.
     """
-    return die.scan_file(file_path, die.ScanFlags.RESULT_AS_JSON, str(die.database_path/'db'))
+    return die.scan_file(file_path, die.ScanFlags.VERBOSE_FLAG | die.ScanFlags.DEEP_SCAN | die.ScanFlags.HEURISTIC_SCAN | die.ScanFlags.RECURSIVE_SCAN | die.ScanFlags.RESULT_AS_JSON, str(die.database_path/'db'))
 
 @mcp.tool("run_yara-scan")
 def run_yara_scan(file_path: str) -> dict:
@@ -299,6 +299,8 @@ def run_capa_scan(file_path: str) -> dict:
             output = subprocess.check_output(
                 [CAPA_EXE_PATH, "-q", file_path],
                 stderr=subprocess.DEVNULL,
+                encoding='utf-8',
+                errors='replace',
                 universal_newlines=True
             )
             return output
